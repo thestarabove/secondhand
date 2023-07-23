@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wtt.dao.RatingformMapper">
+  <resultMap id="BaseResultMap" type="wtt.pojo.Ratingform">
+    <id column="evaluate_id" jdbcType="INTEGER" property="evaluateId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="star_rating" jdbcType="VARCHAR" property="starRating" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    evaluate_id, order_id, `state`, star_rating, create_time, update_time, content, user_id
+  </sql>
+  <select id="selectByEvaluateId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_ratingform
+    where evaluate_id = #{evaluateId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllByUserIdRatingforms" resultType="wtt.pojo.Ratingform" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from tb_ratingform
+    where user_Id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteEvaluateId" parameterType="java.lang.Integer">
+    delete from tb_ratingform
+    where evaluate_id = #{evaluateId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertRatingform" keyColumn="evaluate_id" keyProperty="evaluateId" parameterType="wtt.pojo.Ratingform" useGeneratedKeys="true">
+    insert into tb_ratingform (order_id, `state`, star_rating, 
+      create_time, update_time, content, 
+      user_id)
+    values (#{orderId,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{starRating,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="evaluate_id" keyProperty="evaluateId" parameterType="wtt.pojo.Ratingform" useGeneratedKeys="true">
+    insert into tb_ratingform
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="starRating != null">
+        star_rating,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="starRating != null">
+        #{starRating,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="wtt.pojo.Ratingform">
+    update tb_ratingform
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="starRating != null">
+        star_rating = #{starRating,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      update_time = #{updateTime},
+    </set>
+    where evaluate_id = #{evaluateId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByEvaluateId" parameterType="wtt.pojo.Ratingform">
+    update tb_ratingform
+    set order_id = #{orderId,jdbcType=BIGINT},
+      `state` = #{state,jdbcType=VARCHAR},
+      star_rating = #{starRating,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER}
+    where evaluate_id = #{evaluateId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wtt.dao.OrderMapper">
+  <!-- order表和goods表的数据的结果集  -->
+  <resultMap id="BaseResultMap" type="wtt.pojo.Order">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="second_hand_id" jdbcType="INTEGER" property="secondHandId" />
+    <result column="userId1" jdbcType="INTEGER" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="total" jdbcType="VARCHAR" property="total"/>
+    <result column="seller_id" jdbcType="INTEGER" property="sellerId"/>
+    <collection property="goods" ofType="wtt.pojo.Goods">
+      <result property="secondHandId" javaType="INTEGER" column="second_hand_id"/>
+      <result property="userId" javaType="INTEGER" column="gu"/>
+      <result property="cartImg" column="cart_img" typeHandler="wtt.utils.ListToVarcharTypeHandler"/>
+      <result property="cartTitle" column="cart_title"/>
+      <result property="goodNum" column="good_num"/>
+      <result property="cartDescription" column="cart_description"/>
+      <result property="createTime" jdbcType="TIMESTAMP" column="c1"/>
+      <result property="updateTime" jdbcType="TIMESTAMP" column="u1"/>
+      <result property="price" javaType="BigDecimal" column="price"/>
+      <result property="status" column="status"/>
+    </collection>
+    <collection property="userVo" ofType="wtt.vo.UserVo">
+      <result property="userId" column="bu" javaType="INTEGER"/>
+      <result property="userPhone" column="user_phone"/>
+      <result property="userName" column="user_name"/>
+      <result property="address" column="address"/>
+    </collection>
+  </resultMap>
+  <!-- order表和goods表数据  -->
+  <sql id="Base_Column_List">
+    o.order_id, o.second_hand_id, o.user_id userId1,
+o.create_time, o.update_time, `state`,o.total,g.cart_title,g.cart_img,g.cart_description,
+g.user_id gu,g.price,g.create_time c1,g.update_time u1,g.second_hand_id,g.status,g.good_num
+  </sql>
+  <!--通过订单查询  -->
+  <select id="selectByOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+   <include refid="Base_Column_List"></include>
+    from tb_user u
+    join tb_order o on u.user_id=o.user_id
+    join tb_goods g on o.second_hand_id=g.second_hand_id
+    where o.order_id=#{orderId} and o.second_hand_id=g.second_hand_id
+  </select>
+  <!--通过买家id查询  -->
+  <select id="selectAllByUserIdOrder" resultType="wtt.pojo.Order">
+    select * from tb_order
+    where user_id=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserIdOrder" resultType="wtt.pojo.Order" resultMap="BaseResultMap">
+    select o.order_id,o.second_hand_id,o.user_id userId1,o.seller_id,o.state,o.create_time,o.total,g.cart_title,g.user_id gu,g.cart_img,g.price,u.user_name,u.user_phone,u.address
+    from tb_user u
+           join tb_order o on u.user_id=o.user_id
+           join tb_goods g on o.second_hand_id=g.second_hand_id
+    where o.user_id=#{userId,jdbcType=INTEGER} and `state`=#{state,jdbcType=VARCHAR}
+  </select>
+  <select id="selectOrderedBySeller" resultType="wtt.pojo.Order" resultMap="BaseResultMap">
+    select o.order_id,o.second_hand_id,o.user_id bu,o.state,o.create_time,o.total,g.cart_title,g.user_id gu,g.cart_img,g.price,g.good_num,u.user_name,u.user_phone,u.address
+    from tb_user u
+           join tb_order o on u.user_id=o.user_id
+           join tb_goods g on o.second_hand_id=g.second_hand_id
+    where o.seller_id=#{sellerId,jdbcType=INTEGER} and `state`=#{state,jdbcType=VARCHAR}
+  </select>
+  <!--通过订单id删除  -->
+  <delete id="deleteByOrderId" parameterType="java.lang.Integer">
+    delete from tb_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <!--新增订单信息 -->
+  <insert id="insertOrder" keyColumn="order_id" keyProperty="orderId" parameterType="wtt.pojo.Order" useGeneratedKeys="true">
+    insert into tb_order (second_hand_id, user_id, seller_id,create_time,
+      update_time, `state`,`total`)
+    values (#{secondHandId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{sellerId,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{state,jdbcType=VARCHAR},#{total,jdbcType=VARCHAR})
+  </insert>
+  <!--不覆盖新增订单信息  -->
+  <insert id="insertSelective" keyColumn="order_id" keyProperty="orderId" parameterType="wtt.pojo.Order" useGeneratedKeys="true">
+    insert into tb_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="secondHandId != null">
+        second_hand_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="secondHandId != null">
+        #{secondHandId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--不覆盖修改订单信息  -->
+  <update id="updateByPrimaryKeySelective" parameterType="wtt.pojo.Order">
+    update tb_order
+    <set>
+      <if test="secondHandId != null">
+        second_hand_id = #{secondHandId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <!-- 修改订单信息 -->
+  <update id="updateByOrderId" parameterType="wtt.pojo.Order">
+    update tb_order
+    set second_hand_id = #{secondHandId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      `state` = #{state,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

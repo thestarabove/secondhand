@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>INSPINIA | Login 2</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body class="gray-bg">
+
+<div class="loginColumns animated fadeInDown">
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="ibox-content">
+        <form class="m-t" role="form" action="http://127.0.0.1:8080/login">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="用户名" required="">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" placeholder="密码" required="">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="code" placeholder="验证码" required="">
+            <span class="p-new-code l-mar-r15"> <img src="http://127.0.0.1:8080/kaptcha/getKaptchaImage" class="reloadImage" id="reloadImage"
+                                                     width="121" height="40"/> </span>
+            <a href="javaScript:;" class="l-color9 reloadImage">看不清楚，换一张</a>
+          </div>
+          <button  id = "login" type="submit" class="btn btn-primary block full-width m-b">Login</button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <hr/>
+
+</div>
+
+</body>
+<script>
+  $(".reloadImage").click(function () {
+    //获取当前的时间作为参数，无具体意义
+    var timenow = new Date().getTime();
+    $('#reloadImage').attr("src", "http://127.0.0.1:8080/kaptcha/getKaptchaImage?date=" + timenow);
+  });
+
+</script>
+
+</html>
+

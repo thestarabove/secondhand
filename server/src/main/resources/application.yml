@@ -1,0 +1,75 @@
+
+spring:
+  web:
+    resources:
+      static-locations: file:D://3.2//javaweb//secondhand2//static
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/secondhand?serverTimeZone=UTC
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: root
+      timeout: 5000
+
+      lettuce:
+        pool:
+          max-idle: 500
+          min-idle: 50
+          max-active: 1000
+          max-wait: 2000
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    stream:
+      username: xilin
+      password: 9578315
+    virtual-host: abovethestar
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: wtt.Pojo
+
+
+
+
+
+server:
+  port: 8081
+  servlet:
+    session:
+      timeout: 1800
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+sa-token:
+  # token前缀
+  # Token前缀 与 Token值 之间必须有一个空格。
+  # 一旦配置了 Token前缀，则前端提交 Token 时，必须带有前缀，否则会导致框架无法读取 Token。
+  # 由于Cookie中无法存储空格字符，也就意味配置 Token 前缀后，Cookie 鉴权方式将会失效，此时只能将 Token 提交到header里进行传输
+  # token-prefix: Bearer
+  # token 名称 (同时也是cookie名称)
+  token-name: satoken
+  # token 有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token 临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+  # 配置 Sa-Token 单独使用的 Redis 连接
+logging:
+  level:
+     root: INFO
+     com.example: DEBUG
+

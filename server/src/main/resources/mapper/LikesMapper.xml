@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wtt.dao.LikesMapper">
+  <resultMap id="BaseResultMap" type="wtt.pojo.Likes">
+    <id column="like_id" jdbcType="INTEGER" property="likeId" />
+    <result column="second_hand_id" jdbcType="INTEGER" property="secondHandId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <collection property="goods" ofType="wtt.pojo.Goods">
+      <result property="cartTitle" column="cart_title"/>
+      <result property="cartImg" column="cart_img" typeHandler="wtt.utils.ListToVarcharTypeHandler"/>
+      <result property="cartDescription" column="cart_description"/>
+      <result property="userId" javaType="INTEGER" column="user_id"/>
+      <result property="secondHandId" javaType="INTEGER" column="second_hand_id"/>
+      <result property="price" javaType="BigDecimal" column="price"/>
+      <result property="status" column="status"/>
+      <result property="goodNum" column="good_num"/>
+      <result property="createTime" jdbcType="TIMESTAMP" column="c1"/>
+      <result property="updateTime" jdbcType="TIMESTAMP" column="u1"/>
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    l.like_id, l.second_hand_id, l.create_time, l.update_time, l.user_id,g.cart_title,g.cart_img,g.cart_description,g.user_id,g.price,g.create_time c1,g.update_time u1,g.status,g.good_num
+  </sql>
+  <sql id="Base_Column_List2">
+    l.like_id, l.second_hand_id, l.create_time, l.update_time, l.user_id,g.cart_title,g.cart_img,g.cart_description,g.price,g.create_time c1,g.update_time u1,g.status,g.good_num
+  </sql>
+  <select id="selectByLikesId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+   <include refid="Base_Column_List"></include>
+    from tb_likes l,tb_goods g
+    where like_id = #{likeId,jdbcType=INTEGER} and l.second_hand_id=g.second_hand_id
+  </select>
+  <select id="selectAllLikesByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List2"></include>
+    from tb_likes l,tb_goods g
+    where l.user_id = #{userId,jdbcType=INTEGER} and l.second_hand_id=g.second_hand_id
+  </select>
+  <select id="findAllByPage" resultType="wtt.pojo.Likes" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List2"></include>
+    from tb_likes l,tb_goods g
+    where l.user_id = #{userId,jdbcType=INTEGER} and l.second_hand_id=g.second_hand_id limit #{pageNum},#{pageSize}
+
+  </select>
+    <select id="selectLikesByUserIdandGoodId" resultType="wtt.pojo.Likes">
+      select * from tb_likes
+      where user_id=#{userId,jdbcType=INTEGER} and second_hand_id=#{secondHandId}
+    </select>
+
+    <delete id="deleteByLikesId" parameterType="java.lang.Integer">
+    delete from tb_likes
+    where like_id = #{likeId,jdbcType=INTEGER} and user_id=#{userId}
+  </delete>
+  <insert id="insertLikes" keyColumn="like_id" keyProperty="likeId" parameterType="wtt.pojo.Likes" useGeneratedKeys="true">
+    insert into tb_likes (second_hand_id, create_time, update_time, 
+      user_id)
+    values (#{secondHandId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{userId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="like_id" keyProperty="likeId" parameterType="wtt.pojo.Likes" useGeneratedKeys="true">
+    insert into tb_likes
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="secondHandId != null">
+        second_hand_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="secondHandId != null">
+        #{secondHandId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="wtt.pojo.Likes">
+    update tb_likes
+    <set>
+      <if test="secondHandId != null">
+        second_hand_id = #{secondHandId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      update_time = #{updateTime},
+    </set>
+    where like_id = #{likeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByLikesId" parameterType="wtt.pojo.Likes">
+    update tb_likes
+    set second_hand_id = #{secondHandId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER}
+    where like_id = #{likeId,jdbcType=INTEGER}
+  </update>
+</mapper>
