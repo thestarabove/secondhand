@@ -3,6 +3,8 @@ package wtt.utils;
 import cn.dev33.satoken.stp.StpInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import wtt.handler.factoryHandler.Factory;
+import wtt.handler.server.BasedHandler;
 import wtt.pojo.User;
 import wtt.service.UserService;
 
@@ -20,36 +22,18 @@ public class Role implements StpInterface {
         User user=userService.getUser(Integer.valueOf(userId));
         //System.out.println(user.getRole());
          if (user.getRole()==0||user.getRole()==1){
-             stringList.add("user-get");
-             stringList.add("user-update");
-             stringList.add("good-get");
-             stringList.add("like-add");
-             stringList.add("like-get");
-             stringList.add("like-delete");
-             stringList.add("cart-add");
-             stringList.add("cart-get");
-             stringList.add("cart-update");
-             stringList.add("cart-delete");
+             BasedHandler basedHandler= (BasedHandler) Factory.getInvokeStrategy("user");
+             List<String> doHandler = basedHandler.doHandler();
+             stringList=doHandler;
          }else if (user.getRole()==2){
-             stringList.add("user-get");
-             stringList.add("user-update");
-             stringList.add("good-get");
-             stringList.add("good-add");
-             stringList.add("good-update");
-             stringList.add("like-add");
-             stringList.add("like-get");
-             stringList.add("like-delete");
-             stringList.add("cart-add");
-             stringList.add("cart-get");
-             stringList.add("cart-update");
-             stringList.add("cart-delete");
+             BasedHandler basedHandler= (BasedHandler) Factory.getInvokeStrategy("seller");
+             List<String> doHandler = basedHandler.doHandler();
+             stringList=doHandler;
          }else {
-             stringList.add("user-get");
-             stringList.add("user-update");
-             stringList.add("user-delete");
-             stringList.add("good-delete");
-             stringList.add("seller-add");
-             stringList.add("user-getAll");
+             BasedHandler basedHandler= (BasedHandler) Factory.getInvokeStrategy("admin");
+             List<String> doHandler = basedHandler.doHandler();
+             stringList=doHandler;
+
          }
         System.out.println("用户权限列表：" + stringList);
 

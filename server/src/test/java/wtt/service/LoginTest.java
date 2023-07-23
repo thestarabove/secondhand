@@ -1,5 +1,7 @@
 package wtt.service;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
+import cn.dev33.satoken.stp.StpUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,9 +30,10 @@ public class LoginTest {
     }
     @Test
     void loginTest(){
-       String account="111";
-       String password="111";
-      UserVo user= loginService.loginUser(account,password);
+        StpUtil.login(8);
+        SaTokenInfo saTokenInfo =StpUtil.getTokenInfo();
+        System.out.println(StpUtil.getPermissionList(saTokenInfo.loginId));
+        System.out.println(StpUtil.getRoleList());
        // System.out.println(user);
     }
 }
