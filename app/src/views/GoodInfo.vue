@@ -52,6 +52,7 @@
             <div class="purchase">
               <el-button type="danger" round>立即购买</el-button>
               <el-button type="warning" round @click="addCart">加入购物车</el-button>
+              <el-button type="success" round @click="contactSeller">联系卖家</el-button>
             </div>
             Main
           </el-main>
@@ -181,6 +182,35 @@ export default {
         .catch((err) => {
           ElMessage({
             Message: '加入失败！',
+            type: 'warning'
+          })
+        })
+    },
+    contactSeller() {
+      const good = this.goodsName[0]
+      if (!good || !good.userId) {
+        ElMessage({
+          message: '无法获取卖家信息',
+          type: 'warning'
+        })
+        return
+      }
+      axios
+        .get('/chat/session', {
+          params: {
+            peerUserId: good.userId,
+            goodId: good.secondHandId
+          }
+        })
+        .then((res) => {
+          this.$router.push({
+            path: '/chat',
+            query: { sessionId: res.data.data.sessionId }
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            message: '请先登录后再联系卖家',
             type: 'warning'
           })
         })

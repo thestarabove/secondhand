@@ -14,7 +14,7 @@
           <div class="order1"> </div>
           <div class="order2"> {{ item.goods.cartTitle }}</div>
           <div class="orderInfo-second">
-            <img class="imgOrder" :src="orderImage[index]">
+            <img class="imgOrder" :src="orderImage[index]" alt="">
           </div>
           <div class="order3"> {{ orderTime[index] }}</div>
           <div class="order4"> {{ item.state }}</div>

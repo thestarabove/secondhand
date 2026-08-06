@@ -64,6 +64,7 @@
 
       <el-menu-item index="4" @click="index">首页</el-menu-item>
       <el-menu-item index="5">客服</el-menu-item>
+      <el-menu-item index="8" @click="chat">消息</el-menu-item>
       <el-menu-item v-if="this.$cookies.get('role') == 0" @click="appSeller" index="6"
         >申请成为卖家</el-menu-item
       >
@@ -105,6 +106,9 @@ export default {
     },
     index() {
       this.$router.push('/index')
+    },
+    chat() {
+      this.$router.push('/chat')
     },
     purchaseGood() {
       this.$router.push('/Announce')

@@ -282,4 +282,36 @@ INSERT INTO `tb_user` VALUES (21, '啊哈哈', '18127447921', 856, '5', '@GC
 INSERT INTO `tb_user` VALUES (22, '6', '18127447942', 988, '6', 'EBCMDMEALLDBABDLCEF', 'aaa', 1, 'localhost:8081/images/09f76a7388774b2180.jpeg');
 INSERT INTO `tb_user` VALUES (23, 'xilin', '101111', 1000, '444', 'BMLAEEMLEFEALE@MMCCDEBBL', 'xilin', 0, NULL);
 
+-- ----------------------------
+-- Table structure for tb_chat_session (buyer <-> seller chat session)
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_chat_session`;
+CREATE TABLE `tb_chat_session` (
+  `session_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `buyer_id` int(11) DEFAULT NULL,
+  `seller_id` int(11) DEFAULT NULL,
+  `good_id` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`session_id`) USING BTREE,
+  KEY `idx_buyer` (`buyer_id`) USING BTREE,
+  KEY `idx_seller` (`seller_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tb_chat_message
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_chat_message`;
+CREATE TABLE `tb_chat_message` (
+  `message_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `session_id` bigint(20) DEFAULT NULL,
+  `sender_id` int(11) DEFAULT NULL,
+  `receiver_id` int(11) DEFAULT NULL,
+  `content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_read` tinyint(4) DEFAULT 0,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`message_id`) USING BTREE,
+  KEY `idx_session` (`session_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;

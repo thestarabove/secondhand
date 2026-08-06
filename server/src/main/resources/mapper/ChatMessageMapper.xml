@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wtt.dao.ChatMessageMapper">
+  <select id="selectMessagesBySession" resultType="wtt.vo.ChatMessageVo">
+    select message_id  as messageId,
+           session_id  as sessionId,
+           sender_id   as senderId,
+           receiver_id as receiverId,
+           content,
+           is_read     as isRead,
+           create_time as createTime
+    from tb_chat_message
+    where session_id = #{sessionId}
+    order by message_id asc
+  </select>
+
+  <update id="updateReadBySession">
+    update tb_chat_message
+    set is_read = 1
+    where session_id = #{sessionId}
+      and receiver_id = #{userId}
+      and is_read = 0
+  </update>
+</mapper>

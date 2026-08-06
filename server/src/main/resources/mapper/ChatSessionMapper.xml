@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wtt.dao.ChatSessionMapper">
+  <select id="selectSessionList" resultType="wtt.vo.ChatSessionVo">
+    select s.session_id       as sessionId,
+           case when s.buyer_id = #{userId} then s.seller_id else s.buyer_id end as peerUserId,
+           u.user_name        as peerUserName,
+           u.img              as peerUserImg,
+           m.content          as lastMessage,
+           m.create_time      as lastMessageTime,
+           s.good_id          as goodId,
+           g.cart_title       as goodTitle,
+           (select count(1)
+            from tb_chat_message cm
+            where cm.session_id = s.session_id
+              and cm.receiver_id = #{userId}
+              and cm.is_read = 0) as unreadCount
+    from tb_chat_session s
+           left join tb_user u
+                     on u.user_id = case when s.buyer_id = #{userId} then s.seller_id else s.buyer_id end
+           left join tb_goods g on g.second_hand_id = s.good_id
+           left join tb_chat_message m
+                     on m.message_id = (select mm.message_id
+                                        from tb_chat_message mm
+                                        where mm.session_id = s.session_id
+                                        order by mm.message_id desc
+                                        limit 1)
+    where s.buyer_id = #{userId}
+       or s.seller_id = #{userId}
+    order by ifnull(m.create_time, s.update_time) desc
+  </select>
+</mapper>

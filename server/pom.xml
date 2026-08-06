@@ -26,6 +26,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
@@ -149,6 +154,17 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>9.0.5</version>
+                <configuration>
+                    <nvdApiKey>27b2451c-2b32-4d78-9ec1-3dfe4cd8893a</nvdApiKey>
+                    <!-- 默认 2000 ms，可提到 4000~6000 ms -->
+                    <nvdApiDelay>6000</nvdApiDelay>
                 </configuration>
             </plugin>
 
